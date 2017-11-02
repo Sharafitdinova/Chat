@@ -1,7 +1,6 @@
 from twisted.internet.protocol import Factory
 from twisted.protocols.basic import LineReceiver
 from twisted.internet import reactor
-#import sys
 import datetime
 
 port = 12345
@@ -38,6 +37,17 @@ class ChatProtocol(LineReceiver):
             self.sendLine('======== List of connected clients: %s ' % (", ".join(self.factory.users)))
         elif line == "/exit":
             self.connectionLost()
+        elif line == ":cat:":
+            self.sendLine("  /\_/\ \n ( o.o ) \n  > ^ <")
+        elif line == ":dog:":
+            self.sendLine(" ,-.___,-. \n \_/_ _\_/ \n   )O_O( \n  { (_) } \n   `-^-' ")
+        elif line == ":love:":
+            self.sendLine(",d88b.d88b,\n88888888888\n'Y8888888Y'\n  'Y888Y'  \n    'Y'  ")
+        elif line == ":car:":
+            self.sendLine("               .--.      [ATM]\n          .----'   '--.    |\n          '-()-----()-'    |")
+        elif line == ":fish:":
+            self.sendLine(
+                "                       _,--,\n                    .-'---./_    __\n                   /o \\     '-.' /\n                   \  //    _.-'._\ \n                    `'\)--'` ")
         else:
             self.handle_chat(line)
 
@@ -47,10 +57,12 @@ class ChatProtocol(LineReceiver):
             return
 
         self.sendLine("======== You always can see the list of connected clients. Just send '/list'.")
+        self.sendLine("======== You always can use stikers. Just send ':cat:', ':dog:', ':love:', ':car:', ':fish:'.")
         self.sendLine("======== You always can quit from the chat. Just send '/exit'.")
         self.sendLine('Welcome to the chat, %s!' % (name,))
         self.broadcastMessage('%s has joined to the chat.' % (name,))
         self.broadcastMessage("======== Send '/list' to display the list of connected clients.")
+        self.broadcastMessage("======== You always can use stikers. Just send ':cat:', ':dog:', ':love:', ':car:', ':fish:'.")
         self.broadcastMessage("======== You always can quit from the chat. Just send '/exit'.")
         self.name = name
         self.factory.users[name] = self
@@ -91,5 +103,5 @@ class ChatFactory(Factory):
 
 
 reactor.listenTCP(port, ChatFactory())
-print("Chat server started on port  %s" % (port,))
+print("Chat server started on port %s" % (port,))
 reactor.run()
